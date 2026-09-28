@@ -5,7 +5,12 @@ import { createLogger } from './utils/logger.js';
 
 const env = loadEnvironment();
 const logger = createLogger();
-const app = createApp({ lineConfig: createLineConfig(env), logger });
+const app = createApp({
+  lineConfig: createLineConfig(env),
+  logger,
+  maxMessagesPerGroup: env.MAX_MESSAGES_PER_GROUP,
+  maxSummaryMessages: env.MAX_SUMMARY_MESSAGES,
+});
 
 app.listen(env.PORT, () => {
   logger.info({ event: 'server_started', port: env.PORT, environment: env.NODE_ENV });

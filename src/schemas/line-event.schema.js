@@ -8,6 +8,7 @@ const sourceSchema = z.object({
 
 export const lineEventSchema = z.object({
   type: z.string(),
+  replyToken: z.string().optional(),
   timestamp: z.number().optional(),
   source: sourceSchema.optional(),
   message: z
