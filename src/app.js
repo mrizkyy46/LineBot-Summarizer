@@ -12,16 +12,12 @@ import { createSummaryService } from './services/summary.service.js';
 import { createLlmService } from './services/llm.service.js';
 import { createLineService } from './services/line.service.js';
 
-export function createApp({ lineConfig, logger, llmService, messageStore, summaryCommand, summaryService, lineService, maxMessagesPerGroup, maxSummaryMessages, llmConfig }) {
+export function createApp({ lineConfig, logger, llmService, messageStore, summaryCommand, summaryService, lineService, maxMessagesPerGroup, maxSummaryMessages, timeZone = 'Asia/Jakarta', llmConfig }) {
   const app = express();
   const store = messageStore ?? createMessageStore({ maxMessagesPerGroup });
-  const summaries = summaryService ?? createSummaryService({
-    messageStore: store,
-    llmService: llmService ?? createLlmService({ ...llmConfig, logger }),
-    maxSummaryMessages,
-  });
+  const summaries = summaryService ?? createSummaryService({ llmService: llmService ?? createLlmService({ ...llmConfig, logger }), timeZone });
   const replies = lineService ?? createLineService({ channelAccessToken: lineConfig.channelAccessToken });
-  const command = summaryCommand ?? createSummaryCommand({ summaryService: summaries, lineService: replies, logger });
+  const command = summaryCommand ?? createSummaryCommand({ summaryService: summaries, lineService: replies, messageStore: store, logger, maxSummaryMessages, maxMessagesPerGroup, timeZone });
   const lineWebhookController = createLineWebhookController({
     logger,
     messageStore: store,
@@ -47,6 +43,7 @@ function getVercelApp() {
       logger: createLogger(),
       maxMessagesPerGroup: env.MAX_MESSAGES_PER_GROUP,
       maxSummaryMessages: env.MAX_SUMMARY_MESSAGES,
+      timeZone: env.APP_TIMEZONE,
       llmConfig: { provider: env.LLM_PROVIDER, apiKey: env.LLM_API_KEY, model: env.LLM_MODEL, timeoutMs: env.LLM_TIMEOUT_MS },
     });
   }

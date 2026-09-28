@@ -18,9 +18,19 @@ export function createMessageStore({ maxMessagesPerGroup = 500 } = {}) {
     return recentMessages.map((message) => ({ ...message }));
   }
 
+  function getMessagesByTimeRange(groupId, startDate, endDate) {
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+    if (!Number.isFinite(start) || !Number.isFinite(end) || start >= end) return [];
+    return (messagesByGroup.get(groupId) ?? [])
+      .filter((message) => message.timestamp >= start && message.timestamp < end)
+      .map((message) => ({ ...message }));
+  }
+
   return {
     saveMessage,
     getMessages,
+    getMessagesByTimeRange,
     getMessageCount: (groupId) => (messagesByGroup.get(groupId) ?? []).length,
     clearGroup: (groupId) => messagesByGroup.delete(groupId),
     clearAll: () => messagesByGroup.clear(),

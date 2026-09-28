@@ -12,6 +12,7 @@ const environmentSchema = z.object({
   MAX_MESSAGES_PER_GROUP: z.coerce.number().int().min(1).default(500),
   MAX_SUMMARY_MESSAGES: z.coerce.number().int().min(1).default(200),
   LLM_TIMEOUT_MS: z.coerce.number().int().min(1).default(30_000),
+  APP_TIMEZONE: z.string().min(1).default('Asia/Jakarta'),
 });
 
 export function loadEnvironment(values = process.env) {

@@ -40,4 +40,13 @@ describe('message store', () => {
     store.clearAll();
     expect(store.getMessageCount('Cgroup')).toBe(0);
   });
+
+  it('filters an inclusive start and exclusive end within the requested group', () => {
+    const store = createMessageStore();
+    store.saveMessage(message(1, 'Cgroup'));
+    store.saveMessage(message(2, 'Cother'));
+    store.saveMessage(message(3, 'Cgroup'));
+    expect(store.getMessagesByTimeRange('Cgroup', new Date(1), new Date(4))).toEqual([message(1, 'Cgroup'), message(3, 'Cgroup')]);
+    expect(store.getMessagesByTimeRange('Cempty', new Date(1), new Date(3))).toEqual([]);
+  });
 });

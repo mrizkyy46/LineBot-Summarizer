@@ -10,6 +10,7 @@ const app = createApp({
   logger,
   maxMessagesPerGroup: env.MAX_MESSAGES_PER_GROUP,
   maxSummaryMessages: env.MAX_SUMMARY_MESSAGES,
+  timeZone: env.APP_TIMEZONE,
   llmConfig: { provider: env.LLM_PROVIDER, apiKey: env.LLM_API_KEY, model: env.LLM_MODEL, timeoutMs: env.LLM_TIMEOUT_MS },
 });
 

@@ -1,15 +1,13 @@
 import { formatConversation } from './message-formatter.service.js';
 
-export function createSummaryService({ messageStore, llmService, maxSummaryMessages = 200 }) {
+export function createSummaryService({ llmService, timeZone = 'Asia/Jakarta' }) {
   return {
-    async generateSummary(groupId) {
-      const messages = messageStore.getMessages(groupId, { limit: maxSummaryMessages });
-
+    async generateSummary(messages) {
       if (messages.length === 0) {
         return { status: 'empty' };
       }
 
-      const summary = await llmService.generateSummary(formatConversation(messages));
+      const summary = await llmService.generateSummary(formatConversation(messages, timeZone));
       return { status: 'generated', summary };
     },
   };

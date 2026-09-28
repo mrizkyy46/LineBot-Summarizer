@@ -36,8 +36,8 @@ export function createLineWebhookController({ logger, messageStore, summaryComma
       });
 
       const command = parseCommand(value.message.text ?? '');
-      if (command?.name === 'summary') {
-        await summaryCommand.execute({ groupId: value.source.groupId, replyToken: value.replyToken });
+      if (command) {
+        await summaryCommand.execute({ command, groupId: value.source.groupId, replyToken: value.replyToken });
         continue;
       }
 

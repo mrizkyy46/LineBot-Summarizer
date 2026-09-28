@@ -20,7 +20,19 @@ npm test
 npm run lint
 ```
 
-`GET /health` returns `{ "status": "ok" }`. Configure LINE's webhook URL as `https://your-public-host/webhook/line`; LINE must be able to reach it over HTTPS. Send `/summary` in a group after sending ordinary text messages. The bot summarizes recent messages for that group in Indonesian. The command itself is not stored. Groq transient errors (429, 500, 502, 503) are retried with bounded exponential backoff; failures get a friendly LINE response.
+`GET /health` returns `{ "status": "ok" }`. Configure LINE's webhook URL as `https://your-public-host/webhook/line`; LINE must be able to reach it over HTTPS. `APP_TIMEZONE` controls date filtering and displayed times, defaulting to `Asia/Jakarta`.
+
+Available group commands:
+
+- `/summary` summarizes up to `MAX_SUMMARY_MESSAGES` recent messages.
+- `/summary 1h` and `/summary 3h` summarize the last one or three hours.
+- `/summary today` and `/summary yesterday` summarize the current or previous calendar day in `APP_TIMEZONE`.
+- `/summary YYYY-MM-DD` summarizes one calendar day; `/summary YYYY-MM-DD HH:mm-HH:mm` summarizes a time range on that date.
+- `/status` shows the bot status and this group's retained message count and time bounds.
+- `/clear` clears only this group's in-memory history.
+- `/help` lists the available commands.
+
+Summary commands use only history from the group where they were sent. The command itself is not stored. Groq transient errors (429, 500, 502, 503) are retried with bounded exponential backoff; failures get a friendly LINE response.
 
 ## Vercel
 
