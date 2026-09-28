@@ -55,4 +55,37 @@ describe('summary webhook flow', () => {
     expect(llmService.generateSummary).toHaveBeenCalledWith('[2026-09-28 14:10] Andi:\nBesok deploy.');
     expect(lineService.replyText).toHaveBeenCalledWith('reply-token', 'ringkasan percakapan');
   });
+
+  it('replies with a safe message when the LLM request fails', async () => {
+    const messageStore = createMessageStore();
+    messageStore.saveMessage({
+      groupId: 'Cgroup',
+      userId: 'Uuser',
+      displayName: 'Andi',
+      text: 'Pesan untuk diringkas.',
+      timestamp: Date.UTC(2026, 8, 28, 7, 10),
+    });
+    const llmService = { generateSummary: vi.fn().mockRejectedValue(new Error('provider detail')) };
+    const lineService = { replyText: vi.fn().mockResolvedValue() };
+    const app = createApp({
+      lineConfig: { channelSecret: secret },
+      logger: { info() {}, warn() {}, error() {} },
+      messageStore,
+      lineService,
+      summaryService: createSummaryService({ messageStore, llmService }),
+    });
+
+    await signedWebhook(app, {
+      type: 'message',
+      replyToken: 'reply-token',
+      timestamp: Date.UTC(2026, 8, 28, 7, 11),
+      source: { type: 'group', groupId: 'Cgroup', userId: 'Uuser' },
+      message: { id: 'message-2', type: 'text', text: '/summary' },
+    }).expect(200);
+
+    expect(lineService.replyText).toHaveBeenCalledWith(
+      'reply-token',
+      'Maaf, summary sedang gagal dibuat. Silakan coba lagi beberapa saat.',
+    );
+  });
 });

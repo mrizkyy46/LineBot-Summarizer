@@ -16,6 +16,9 @@ describe('GET /health', () => {
   it('exports a Vercel-compatible default request handler', async () => {
     vi.stubEnv('LINE_CHANNEL_SECRET', 'test-secret');
     vi.stubEnv('LINE_CHANNEL_ACCESS_TOKEN', 'test-access-token');
+    vi.stubEnv('LLM_PROVIDER', 'gemini');
+    vi.stubEnv('LLM_API_KEY', 'test-gemini-api-key');
+    vi.stubEnv('LLM_MODEL', 'gemini-test');
 
     const response = await request(vercelHandler).get('/health');
 

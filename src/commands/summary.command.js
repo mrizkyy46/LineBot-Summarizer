@@ -15,7 +15,7 @@ export function createSummaryCommand({ summaryService, lineService, logger }) {
           logger.info({ event: 'summary_generated', groupId });
         }
       } catch (error) {
-        logger.error({ event: 'llm_request_failed', groupId, error: error.message });
+        logger.error({ event: 'llm_request_failed', groupId, errorType: error.name });
 
         try {
           await lineService.replyText(replyToken, SUMMARY_FAILED_MESSAGE);
