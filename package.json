@@ -1,0 +1,32 @@
+{
+  "name": "line-chat-summarizer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^11.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pino": "^9.9.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "eslint": "^9.38.0",
+    "@eslint/js": "^9.38.0",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4",
+    "vitest": "^4.0.6"
+  }
+}
