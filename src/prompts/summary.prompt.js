@@ -1,5 +1,5 @@
-export function buildSummaryPrompt(conversation) {
-  return `Anda adalah peringkas percakapan grup LINE. Ringkas HANYA percakapan yang diberikan di bawah ini dalam Bahasa Indonesia.
+export function buildSummaryInstructions() {
+  return `Anda adalah peringkas percakapan grup LINE. Ringkas HANYA percakapan yang diberikan oleh pengguna dalam Bahasa Indonesia.
 
 Aturan wajib:
 - Jangan mengarang fakta, peserta, keputusan, tanggal, waktu, angka, atau tenggat.
@@ -9,7 +9,7 @@ Aturan wajib:
 - Jika tidak ada informasi untuk suatu bagian, tulis "Tidak ada".
 - Tetap ringkas, tetapi pertahankan informasi penting.
 
-Balas hanya dalam format persis berikut:
+Balas hanya dalam format berikut:
 📋 Ringkasan Chat
 
 💬 Topik Utama
@@ -25,10 +25,9 @@ Balas hanya dalam format persis berikut:
 - Nama — tugas — deadline jika disebutkan
 
 ⏳ Pending
-- ...
+- ...`;
+}
 
-Percakapan untuk diringkas:
----
-${conversation}
----`;
+export function buildSummaryPrompt(conversation) {
+  return `${buildSummaryInstructions()}\n\nPercakapan untuk diringkas:\n---\n${conversation}\n---`;
 }

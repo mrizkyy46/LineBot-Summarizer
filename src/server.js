@@ -10,7 +10,7 @@ const app = createApp({
   logger,
   maxMessagesPerGroup: env.MAX_MESSAGES_PER_GROUP,
   maxSummaryMessages: env.MAX_SUMMARY_MESSAGES,
-  llmConfig: { apiKey: env.LLM_API_KEY, model: env.LLM_MODEL, timeoutMs: env.LLM_TIMEOUT_MS },
+  llmConfig: { provider: env.LLM_PROVIDER, apiKey: env.LLM_API_KEY, model: env.LLM_MODEL, timeoutMs: env.LLM_TIMEOUT_MS },
 });
 
 app.listen(env.PORT, () => {

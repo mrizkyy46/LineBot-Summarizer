@@ -9,7 +9,7 @@ import { createLineWebhookRouter } from './routes/line.webhook.js';
 import { createLogger } from './utils/logger.js';
 import { createMessageStore } from './services/message-store.service.js';
 import { createSummaryService } from './services/summary.service.js';
-import { createGeminiLlmService } from './services/llm.service.js';
+import { createLlmService } from './services/llm.service.js';
 import { createLineService } from './services/line.service.js';
 
 export function createApp({ lineConfig, logger, llmService, messageStore, summaryCommand, summaryService, lineService, maxMessagesPerGroup, maxSummaryMessages, llmConfig }) {
@@ -17,7 +17,7 @@ export function createApp({ lineConfig, logger, llmService, messageStore, summar
   const store = messageStore ?? createMessageStore({ maxMessagesPerGroup });
   const summaries = summaryService ?? createSummaryService({
     messageStore: store,
-    llmService: llmService ?? createGeminiLlmService(llmConfig),
+    llmService: llmService ?? createLlmService({ ...llmConfig, logger }),
     maxSummaryMessages,
   });
   const replies = lineService ?? createLineService({ channelAccessToken: lineConfig.channelAccessToken });
@@ -47,7 +47,7 @@ function getVercelApp() {
       logger: createLogger(),
       maxMessagesPerGroup: env.MAX_MESSAGES_PER_GROUP,
       maxSummaryMessages: env.MAX_SUMMARY_MESSAGES,
-      llmConfig: { apiKey: env.LLM_API_KEY, model: env.LLM_MODEL, timeoutMs: env.LLM_TIMEOUT_MS },
+      llmConfig: { provider: env.LLM_PROVIDER, apiKey: env.LLM_API_KEY, model: env.LLM_MODEL, timeoutMs: env.LLM_TIMEOUT_MS },
     });
   }
 
