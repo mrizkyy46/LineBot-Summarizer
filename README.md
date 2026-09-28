@@ -33,6 +33,10 @@ npm run lint
 
 `GET /health` returns `{ "status": "ok" }`. Configure LINE's webhook URL as `https://your-public-host/webhook/line`; LINE must be able to reach it over HTTPS.
 
+## Vercel
+
+`src/app.js` exports a default request handler for Vercel and keeps its Express instance warm for the current function instance. Set the required LINE variables in the Vercel project environment settings. Use `src/server.js` only for local development; Vercel invokes the default export and does not require `app.listen()`.
+
 ## Current scope
 
 `POST /webhook/line` uses the official LINE SDK to validate `X-Line-Signature`. It responds with success for signed requests, processes text-message events, and logs event metadata such as IDs and text length—never message text or credentials. Unsupported events are safely ignored.
